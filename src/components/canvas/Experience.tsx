@@ -6,6 +6,7 @@ import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { DRACOLoader } from "three/addons/loaders/DRACOLoader.js";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import Modal from "../ui/Modal";
+import gsap from "gsap";
 
 type ModalType = "phone" | "book" | "todo" | "routine" | "watch" | null;
 
@@ -63,6 +64,8 @@ export default function Experience() {
     const pointer = new THREE.Vector2();
     const raycastTargets: THREE.Object3D[] = [];
     let currentIntersects: THREE.Intersection[] = [];
+    let hoveredObject: THREE.Object3D | null = null;
+    const hoverScale = 1.05;
 
     const onMouseMove = (event: MouseEvent) => {
       pointer.x = (event.clientX / sizes.width) * 2 - 1;
@@ -74,18 +77,12 @@ export default function Experience() {
     const onClick = () => {
       if (!currentIntersects.length) return;
 
-      const object = currentIntersects[0].object;
+      const object = currentIntersects[0].object as THREE.Object3D & {
+        userData: { modal?: string };
+      };
 
-      if (object.name.includes("Handphone")) {
-        setActiveModal("phone");
-      } else if (object.name.includes("Book")) {
-        setActiveModal("book");
-      } else if (object.name.includes("Todo")) {
-        setActiveModal("todo");
-      } else if (object.name.includes("Routine")) {
-        setActiveModal("routine");
-      } else if (object.name.includes("Watch")) {
-        setActiveModal("watch");
+      if (object.userData.modal) {
+        setActiveModal(object.userData.modal as ModalType);
       }
     };
 
@@ -123,7 +120,19 @@ export default function Experience() {
       glb.scene.traverse((child) => {
         if (!(child instanceof THREE.Mesh)) return;
 
-        if (child.name.includes("Raycaster")) {
+        if (child.name.includes("Handphone")) {
+          child.userData.modal = "phone";
+        } else if (child.name.includes("Book")) {
+          child.userData.modal = "book";
+        } else if (child.name.includes("Todo")) {
+          child.userData.modal = "todo";
+        } else if (child.name.includes("Routine")) {
+          child.userData.modal = "routine";
+        } else if (child.name.includes("Watch")) {
+          child.userData.modal = "watch";
+        }
+
+        if (child.userData.modal) {
           raycastTargets.push(child);
         }
 
@@ -172,11 +181,67 @@ export default function Experience() {
       raycaster.setFromCamera(pointer, camera);
       currentIntersects = raycaster.intersectObjects(raycastTargets);
 
-      document.body.style.cursor =
-        currentIntersects.length &&
-        currentIntersects[0].object.name.includes("Pointer")
-          ? "pointer"
-          : "default";
+      // if (
+      //   currentIntersects.length > 0 &&
+      //   currentIntersects[0].object.userData.modal
+      // ) {
+      //   document.body.style.cursor = "pointer";
+      // } else {
+      //   document.body.style.cursor = "default";
+      // }
+
+      if (currentIntersects.length) {
+        const object = currentIntersects[0].object;
+
+        if (hoveredObject !== object) {
+          // restore previous hovered object
+          if (hoveredObject) {
+            gsap.killTweensOf(hoveredObject.scale);
+            gsap.to(hoveredObject.scale, {
+              x: hoveredObject.userData.originalScale.x,
+              y: hoveredObject.userData.originalScale.y,
+              z: hoveredObject.userData.originalScale.z,
+              duration: 0.25,
+              ease: "power2.out",
+            });
+          }
+
+          // store original scale once
+          if (!object.userData.originalScale) {
+            object.userData.originalScale = object.scale.clone();
+          }
+
+          // scale up
+          gsap.killTweensOf(object.scale);
+          gsap.to(object.scale, {
+            x: object.userData.originalScale.x * hoverScale,
+            y: object.userData.originalScale.y * hoverScale,
+            z: object.userData.originalScale.z * hoverScale,
+            duration: 0.25,
+            ease: "power2.out",
+          });
+
+          hoveredObject = object;
+        }
+
+        document.body.style.cursor = "pointer";
+      } else {
+        // hover out
+        if (hoveredObject) {
+          gsap.killTweensOf(hoveredObject.scale);
+          gsap.to(hoveredObject.scale, {
+            x: hoveredObject.userData.originalScale.x,
+            y: hoveredObject.userData.originalScale.y,
+            z: hoveredObject.userData.originalScale.z,
+            duration: 0.25,
+            ease: "power2.out",
+          });
+
+          hoveredObject = null;
+        }
+
+        document.body.style.cursor = "default";
+      }
 
       renderer.render(scene, camera);
       frameId = requestAnimationFrame(tick);
@@ -205,31 +270,31 @@ export default function Experience() {
         open={activeModal === "phone"}
         onClose={() => setActiveModal(null)}
       >
-        <h2 className="text-xl font-bold">Phone</h2>
-        <p>This is the phone modal</p>
+        <h2 className="text-xl text-gray-700 font-bold">Phone</h2>
+        <p className="text-gray-400">This is the phone modal</p>
       </Modal>
 
       <Modal open={activeModal === "book"} onClose={() => setActiveModal(null)}>
-        <h2 className="text-xl font-bold">Book</h2>
-        <p>This is the book modal</p>
+        <h2 className="text-xl text-gray-700 font-bold">Manual</h2>
+        <p className="text-gray-400">This is the book modal</p>
       </Modal>
       <Modal open={activeModal === "todo"} onClose={() => setActiveModal(null)}>
-        <h2 className="text-xl font-bold">ToDo List</h2>
-        <p>This is the todo modal</p>
+        <h2 className="text-xl text-gray-700 font-bold">To-Do List</h2>
+        <p className="text-gray-400">This is the todo modal</p>
       </Modal>
       <Modal
         open={activeModal === "routine"}
         onClose={() => setActiveModal(null)}
       >
-        <h2 className="text-xl font-bold">Daily Routine</h2>
-        <p>This is the routine modal</p>
+        <h2 className="text-xl text-gray-700 font-bold">Daily Routine</h2>
+        <p className="text-gray-400">This is the routine modal</p>
       </Modal>
       <Modal
         open={activeModal === "watch"}
         onClose={() => setActiveModal(null)}
       >
-        <h2 className="text-xl font-bold">Set Timer</h2>
-        <p>This is the watch modal</p>
+        <h2 className="text-xl text-gray-700 font-bold">Set Timer</h2>
+        <p className="text-gray-400">This is the watch modal</p>
       </Modal>
     </>
   );
