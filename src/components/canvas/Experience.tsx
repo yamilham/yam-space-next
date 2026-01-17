@@ -133,6 +133,17 @@ export default function Experience() {
       });
     };
 
+    const resolveHoverTarget = (object: THREE.Object3D | null) => {
+      let current = object;
+
+      while (current) {
+        if (current.userData?.hover === "scale") return current;
+        current = current.parent;
+      }
+
+      return null;
+    };
+
     /* ---------- Render loop ---------- */
     let frameId = 0;
 
@@ -143,24 +154,34 @@ export default function Experience() {
         const intersects = cast(camera, raycastTargetsRef.current);
 
         if (intersects.length) {
-          const obj = intersects[0].object;
+          const hitObject = intersects[0].object;
+          const target = resolveHoverTarget(hitObject);
 
-          if (obj.userData.hover === "scale") {
-            if (hoveredObjectRef.current !== obj) {
-              if (hoveredObjectRef.current)
+          if (target) {
+            if (hoveredObjectRef.current !== target) {
+              if (hoveredObjectRef.current) {
                 resetHover(hoveredObjectRef.current);
+              }
 
-              applyHover(obj);
-              hoveredObjectRef.current = obj;
+              applyHover(target);
+              hoveredObjectRef.current = target;
             }
 
             document.body.style.cursor = "pointer";
+          } else {
+            if (hoveredObjectRef.current) {
+              resetHover(hoveredObjectRef.current);
+              hoveredObjectRef.current = null;
+            }
+
+            document.body.style.cursor = "default";
           }
         } else {
           if (hoveredObjectRef.current) {
             resetHover(hoveredObjectRef.current);
             hoveredObjectRef.current = null;
           }
+
           document.body.style.cursor = "default";
         }
       }
@@ -210,7 +231,9 @@ export default function Experience() {
   ----------------------------------- */
   return (
     <>
-      {!ready && <LoadingScreen progress={progress} onComplete={() => setReady(true)}/>}
+      {!ready && (
+        <LoadingScreen progress={progress} onComplete={() => setReady(true)} />
+      )}
 
       <canvas
         ref={canvasRef}
