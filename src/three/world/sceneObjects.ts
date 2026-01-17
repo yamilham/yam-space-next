@@ -19,13 +19,13 @@ export function setupSceneObjects({
     if (Array.isArray(child.material)) return;
 
     /* ---------- INTERACTABLE OBJECTS ---------- */
-    if (child.name.startsWith("interact_")) {
-      const modalName = child.name.split("_")[1];
+    if (child.name.startsWith("interact__")) {
+      const raw = child.name.replace("interact__", "");
+      const modalKey = raw.split("_")[0].toLowerCase();
 
       child.userData = {
-        ...child.userData,
         type: "interactable",
-        modal: modalName,
+        modal: modalKey,
         hover: "scale",
       };
 

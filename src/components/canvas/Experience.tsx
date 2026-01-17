@@ -15,7 +15,13 @@ import { useWindowSize } from "@/hooks/useWindowSize";
 import gsap from "gsap";
 import { OrbitControls } from "three/examples/jsm/Addons.js";
 
-type ModalType = "phone" | "book" | "todo" | "routine" | "watch" | null;
+type ModalType =
+  | "handphone"
+  | "book"
+  | "notetodo"
+  | "noteroutine"
+  | "digitalwatch"
+  | null;
 
 export default function Experience() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -177,8 +183,15 @@ export default function Experience() {
         ref={canvasRef}
         className="fixed inset-0 h-full w-full outline-none"
       />
+      <button
+        onClick={() => setActiveModal("handphone")}
+        className="fixed bottom-4 left-4 z-50 bg-red-500 text-white px-4 py-2"
+      >
+        Test Modal
+      </button>
+
       <Modal
-        open={activeModal === "phone"}
+        open={activeModal === "handphone"}
         onClose={() => setActiveModal(null)}
       >
         <h2 className="text-xl text-gray-700 font-bold">Phone</h2>
@@ -189,19 +202,22 @@ export default function Experience() {
         <h2 className="text-xl text-gray-700 font-bold">Manual</h2>
         <p className="text-gray-400">This is the book modal</p>
       </Modal>
-      <Modal open={activeModal === "todo"} onClose={() => setActiveModal(null)}>
+      <Modal
+        open={activeModal === "notetodo"}
+        onClose={() => setActiveModal(null)}
+      >
         <h2 className="text-xl text-gray-700 font-bold">To-Do List</h2>
         <p className="text-gray-400">This is the todo modal</p>
       </Modal>
       <Modal
-        open={activeModal === "routine"}
+        open={activeModal === "noteroutine"}
         onClose={() => setActiveModal(null)}
       >
         <h2 className="text-xl text-gray-700 font-bold">Daily Routine</h2>
         <p className="text-gray-400">This is the routine modal</p>
       </Modal>
       <Modal
-        open={activeModal === "watch"}
+        open={activeModal === "digitalwatch"}
         onClose={() => setActiveModal(null)}
       >
         <h2 className="text-xl text-gray-700 font-bold">Set Timer</h2>
