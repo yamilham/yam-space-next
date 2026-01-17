@@ -2,7 +2,11 @@
 
 import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
+import gsap from "gsap";
+
 import Modal from "@/components/ui/Modal";
+import LoadingScreen from "@/components/ui/LoadingScreen";
+import { OrbitControls } from "three/examples/jsm/Addons.js";
 import { createRenderer } from "@/three/core/renderer";
 import { createControls } from "@/three/core/controls";
 import { createScene } from "@/three/core/scene";
@@ -11,9 +15,8 @@ import { createRaycaster } from "@/three/interactions/raycaster";
 import { loadTextures } from "@/three/loaders/textureLoader";
 import { createGLTFLoader } from "@/three/loaders/gltfLoader";
 import { setupSceneObjects } from "@/three/world/sceneObjects";
+import { createLoadingManager } from "@/three/loaders/loadingManager";
 import { useWindowSize } from "@/hooks/useWindowSize";
-import gsap from "gsap";
-import { OrbitControls } from "three/examples/jsm/Addons.js";
 
 type ModalType =
   | "handphone"
@@ -25,28 +28,37 @@ type ModalType =
 
 export default function Experience() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+
   const sceneRef = useRef<THREE.Scene | null>(null);
   const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
   const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
-  const controlsRef = useRef<OrbitControls>(null);
+  const controlsRef = useRef<OrbitControls | null>(null);
+
+  const raycastTargetsRef = useRef<THREE.Object3D[]>([]);
+  const hoveredObjectRef = useRef<THREE.Object3D | null>(null);
 
   const { width, height } = useWindowSize();
+
   const [activeModal, setActiveModal] = useState<ModalType>(null);
+  const [progress, setProgress] = useState(0);
+  const [ready, setReady] = useState(false);
+
+  /* ----------------------------------
+     INIT (RUNS ONCE)
+  ----------------------------------- */
   useEffect(() => {
     if (!canvasRef.current) return;
 
-    const initialWidth = window.innerWidth;
-    const initialHeight = window.innerHeight;
-
     const scene = createScene();
-    const camera = createCamera(initialWidth, initialHeight);
+    const camera = createCamera(window.innerWidth, window.innerHeight);
     scene.add(camera);
 
     const renderer = createRenderer(
       canvasRef.current,
-      initialWidth,
-      initialHeight
+      window.innerWidth,
+      window.innerHeight,
     );
+
     const controls = createControls(camera, renderer.domElement);
 
     sceneRef.current = scene;
@@ -54,7 +66,14 @@ export default function Experience() {
     rendererRef.current = renderer;
     controlsRef.current = controls;
 
-    const textureLoader = new THREE.TextureLoader();
+    /* ---------- Loading Manager ---------- */
+    const loadingManager = createLoadingManager(
+      (p) => setProgress(p),
+      () => setReady(true),
+    );
+
+    /* ---------- Load assets ---------- */
+    const textureLoader = new THREE.TextureLoader(loadingManager);
     const textures = loadTextures(textureLoader, {
       Base: "/textures/day/TexturePackBase-day.webp",
       Props: "/textures/day/TexturePackProps-day.webp",
@@ -62,101 +81,107 @@ export default function Experience() {
       Wood: "/textures/day/TexturePackWood-day.webp",
     });
 
-    const { updatePointer, cast } = createRaycaster();
-    const raycastTargets: THREE.Object3D[] = [];
-
-    const onPointerMove = (e: PointerEvent) => {
-      if (!rendererRef.current) return;
-
-      const { width, height } = rendererRef.current.getSize(
-        new THREE.Vector2()
-      );
-
-      updatePointer((e.clientX / width) * 2 - 1, -(e.clientY / height) * 2 + 1);
-    };
-
-    window.addEventListener("pointermove", onPointerMove);
-
-    const gltfLoader = createGLTFLoader();
+    const gltfLoader = createGLTFLoader(loadingManager);
     gltfLoader.load("/models/yam-space-v2.glb", (gltf) => {
       setupSceneObjects({
         scene,
         gltf,
         textures,
-        raycastTargets,
+        raycastTargets: raycastTargetsRef.current,
       });
-      console.log(textures);
     });
 
-    let hoveredObject: THREE.Object3D | null = null;
+    /* ---------- Raycaster ---------- */
+    const { updatePointer, cast } = createRaycaster();
 
+    const onPointerMove = (e: PointerEvent) => {
+      if (!rendererRef.current) return;
+
+      const size = rendererRef.current.getSize(new THREE.Vector2());
+      updatePointer(
+        (e.clientX / size.x) * 2 - 1,
+        -(e.clientY / size.y) * 2 + 1,
+      );
+    };
+
+    window.addEventListener("pointermove", onPointerMove);
+
+    /* ---------- Hover helpers ---------- */
     const applyHover = (object: THREE.Object3D) => {
       if (!object.userData.originalScale) {
         object.userData.originalScale = object.scale.clone();
       }
-      gsap.killTweensOf(object.scale);
+
       gsap.to(object.scale, {
-        x: object.userData.originalScale.x * 1.2,
-        y: object.userData.originalScale.y * 1.2,
-        z: object.userData.originalScale.z * 1.2,
-        duration: 0.3,
+        x: object.userData.originalScale.x * 1.15,
+        y: object.userData.originalScale.y * 1.15,
+        z: object.userData.originalScale.z * 1.15,
+        duration: 0.25,
         ease: "power2.out",
       });
     };
+
     const resetHover = (object: THREE.Object3D) => {
       if (!object.userData.originalScale) return;
-      gsap.killTweensOf(object.scale);
+
       gsap.to(object.scale, {
         x: object.userData.originalScale.x,
         y: object.userData.originalScale.y,
         z: object.userData.originalScale.z,
-        duration: 0.3,
+        duration: 0.25,
         ease: "power2.out",
       });
     };
 
-    let frameId: number;
+    /* ---------- Render loop ---------- */
+    let frameId = 0;
+
     const tick = () => {
       controls.update();
-      const intersects = cast(camera, raycastTargets);
 
-      if (intersects.length) {
-        const object = intersects[0].object;
+      if (ready) {
+        const intersects = cast(camera, raycastTargetsRef.current);
 
-        if (object.userData.hover !== "scale") {
-          if (hoveredObject) resetHover(hoveredObject);
-          hoveredObject = null;
-          document.body.style.cursor = "default";
-        } else {
-          if (hoveredObject !== object) {
-            if (hoveredObject) resetHover(hoveredObject);
-            applyHover(object);
-            hoveredObject = object;
+        if (intersects.length) {
+          const obj = intersects[0].object;
+
+          if (obj.userData.hover === "scale") {
+            if (hoveredObjectRef.current !== obj) {
+              if (hoveredObjectRef.current)
+                resetHover(hoveredObjectRef.current);
+
+              applyHover(obj);
+              hoveredObjectRef.current = obj;
+            }
+
+            document.body.style.cursor = "pointer";
           }
-          document.body.style.cursor = "pointer";
+        } else {
+          if (hoveredObjectRef.current) {
+            resetHover(hoveredObjectRef.current);
+            hoveredObjectRef.current = null;
+          }
+          document.body.style.cursor = "default";
         }
-      } else {
-        if (hoveredObject) resetHover(hoveredObject);
-        hoveredObject = null;
-        document.body.style.cursor = "default";
       }
 
       renderer.render(scene, camera);
       frameId = requestAnimationFrame(tick);
     };
 
-    const onClick = () => {
-      if (!hoveredObject) return;
+    tick();
 
-      const modal = hoveredObject.userData.modal;
-      if (modal) {
-        setActiveModal(modal);
+    /* ---------- Click ---------- */
+    const onClick = () => {
+      if (!ready) return;
+
+      const obj = hoveredObjectRef.current;
+      if (obj?.userData?.modal) {
+        setActiveModal(obj.userData.modal);
       }
     };
 
     window.addEventListener("click", onClick);
-
-    tick();
 
     return () => {
       cancelAnimationFrame(frameId);
@@ -165,8 +190,11 @@ export default function Experience() {
       controls.dispose();
       renderer.dispose();
     };
-  }, []);
+  }, [ready]);
 
+  /* ----------------------------------
+     RESIZE (REAL-TIME)
+  ----------------------------------- */
   useEffect(() => {
     if (!cameraRef.current || !rendererRef.current) return;
 
@@ -177,51 +205,48 @@ export default function Experience() {
     rendererRef.current.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   }, [width, height]);
 
+  /* ----------------------------------
+     JSX
+  ----------------------------------- */
   return (
     <>
+      {!ready && <LoadingScreen progress={progress} onComplete={() => setReady(true)}/>}
+
       <canvas
         ref={canvasRef}
         className="fixed inset-0 h-full w-full outline-none"
       />
-      <button
-        onClick={() => setActiveModal("handphone")}
-        className="fixed bottom-4 left-4 z-50 bg-red-500 text-white px-4 py-2"
-      >
-        Test Modal
-      </button>
 
       <Modal
         open={activeModal === "handphone"}
         onClose={() => setActiveModal(null)}
       >
-        <h2 className="text-xl text-gray-700 font-bold">Phone</h2>
-        <p className="text-gray-400">This is the phone modal</p>
+        <h2 className="text-xl font-bold">Phone</h2>
       </Modal>
 
       <Modal open={activeModal === "book"} onClose={() => setActiveModal(null)}>
-        <h2 className="text-xl text-gray-700 font-bold">Manual</h2>
-        <p className="text-gray-400">This is the book modal</p>
+        <h2 className="text-xl font-bold">Manual</h2>
       </Modal>
+
       <Modal
         open={activeModal === "notetodo"}
         onClose={() => setActiveModal(null)}
       >
-        <h2 className="text-xl text-gray-700 font-bold">To-Do List</h2>
-        <p className="text-gray-400">This is the todo modal</p>
+        <h2 className="text-xl font-bold">To-do</h2>
       </Modal>
+
       <Modal
         open={activeModal === "noteroutine"}
         onClose={() => setActiveModal(null)}
       >
-        <h2 className="text-xl text-gray-700 font-bold">Daily Routine</h2>
-        <p className="text-gray-400">This is the routine modal</p>
+        <h2 className="text-xl font-bold">Routine</h2>
       </Modal>
+
       <Modal
         open={activeModal === "digitalwatch"}
         onClose={() => setActiveModal(null)}
       >
-        <h2 className="text-xl text-gray-700 font-bold">Set Timer</h2>
-        <p className="text-gray-400">This is the watch modal</p>
+        <h2 className="text-xl font-bold">Timer</h2>
       </Modal>
     </>
   );

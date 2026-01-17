@@ -6,7 +6,7 @@ export type TextureMap = Record<string, THREE.Texture>;
 export function loadTextures(
   loader: THREE.TextureLoader,
   sources: Record<string, string>
-): TextureMap {
+): TextureMap { 
   const textures: TextureMap = {};
 
   Object.entries(sources).forEach(([key, path]) => {
