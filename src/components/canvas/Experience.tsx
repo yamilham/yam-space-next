@@ -3,8 +3,15 @@
 import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 
-import Modal from "@/components/ui/Modal";
 import LoadingScreen from "@/components/ui/LoadingScreen";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+
 import { createRenderer } from "@/three/core/renderer";
 import { createControls } from "@/three/core/controls";
 import { createScene } from "@/three/core/scene";
@@ -15,14 +22,7 @@ import { setupSceneObjects } from "@/three/world/sceneObjects";
 import { createLoadingManager } from "@/three/loaders/loadingManager";
 import { createInteraction } from "@/three/interactions/interaction";
 import { useWindowSize } from "@/hooks/useWindowSize";
-
-type ModalType =
-  | "handphone"
-  | "book"
-  | "notetodo"
-  | "noteroutine"
-  | "digitalwatch"
-  | null;
+import { modalContents, ModalType } from "@/components/config/modalContents";
 
 export default function Experience() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -37,7 +37,7 @@ export default function Experience() {
   const readyRef = useRef(false);
   const { width, height } = useWindowSize();
 
-  const [activeModal, setActiveModal] = useState<ModalType>(null);
+  const [activeModal, setActiveModal] = useState<ModalType | null>(null);
   const [progress, setProgress] = useState(0);
   const [ready, setReady] = useState(false);
 
@@ -72,7 +72,7 @@ export default function Experience() {
       targets: raycastTargetsRef,
       onClickObject: (obj) => {
         if (obj.userData?.modal) {
-          setActiveModal(obj.userData.modal);
+          setActiveModal(obj.userData.modal as ModalType);
         }
       },
     });
@@ -190,6 +190,8 @@ export default function Experience() {
   /* ----------------------------------
      JSX
   ----------------------------------- */
+  const currentModalConfig = activeModal ? modalContents[activeModal] : null;
+  const ModalIcon = currentModalConfig?.icon;
   return (
     <>
       {!ready && (
@@ -201,37 +203,20 @@ export default function Experience() {
         className="fixed inset-0 h-full w-full outline-none"
       />
 
-      <Modal
-        open={activeModal === "handphone"}
-        onClose={() => setActiveModal(null)}
-      >
-        <h2 className="text-xl font-bold">Phone</h2>
-      </Modal>
-
-      <Modal open={activeModal === "book"} onClose={() => setActiveModal(null)}>
-        <h2 className="text-xl font-bold">Manual</h2>
-      </Modal>
-
-      <Modal
-        open={activeModal === "notetodo"}
-        onClose={() => setActiveModal(null)}
-      >
-        <h2 className="text-xl font-bold">To-do</h2>
-      </Modal>
-
-      <Modal
-        open={activeModal === "noteroutine"}
-        onClose={() => setActiveModal(null)}
-      >
-        <h2 className="text-xl font-bold">Routine</h2>
-      </Modal>
-
-      <Modal
-        open={activeModal === "digitalwatch"}
-        onClose={() => setActiveModal(null)}
-      >
-        <h2 className="text-xl font-bold">Timer</h2>
-      </Modal>
+      <Dialog open={!!activeModal} onOpenChange={() => setActiveModal(null)}>
+        <DialogContent className="sm:max-w-125">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-xl">
+              {ModalIcon && <ModalIcon className="w-6 h-6" />}
+              {currentModalConfig?.title}
+            </DialogTitle>
+            <DialogDescription className="text-base">
+              {currentModalConfig?.description}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="mt-4">{currentModalConfig?.content}</div>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }
