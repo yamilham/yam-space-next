@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import Link from "next/link";
 import {
-  FaMailchimp,
+  FaEnvelope,
   FaLinkedin,
   FaGithub,
   FaBook,
@@ -30,7 +30,7 @@ export const modalContents: Record<ModalType, ModalConfig> = {
   handphone: {
     title: "Contact",
     description: "Feel free to discuss for new project",
-    icon: FaMailchimp,
+    icon: FaEnvelope,
     content: (
       <div className="space-y-4">
         <p className="text-gray-600">
@@ -39,12 +39,12 @@ export const modalContents: Record<ModalType, ModalConfig> = {
         </p>
         <div className="grid grid-cols-2 gap-3">
           <Link
-            href="mailto:your.email@example.com"
+            href="mailto:yamilham96@gmail.com"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-3 p-4 rounded-lg border hover:border-blue-500 hover:bg-blue-50 transition-all group"
           >
-            <FaMailchimp className="w-5 h-5 text-gray-600 group-hover:text-blue-600" />
+            <FaEnvelope className="w-5 h-5 text-gray-600 group-hover:text-blue-600" />
             <div className="text-left">
               <div className="text-sm font-medium">Email</div>
               <div className="text-xs text-gray-500">Send me a message</div>
@@ -68,7 +68,7 @@ export const modalContents: Record<ModalType, ModalConfig> = {
             href="https://github.com/yamilham"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-3 p-4 rounded-lg border hover:border-gray-500 hover:bg-gray-50 transition-all group"
+            className="flex items-center gap-3 p-4 rounded-lg border hover:border-blue-500 hover:bg-gray-50 transition-all group"
           >
             <FaGithub className="w-5 h-5 text-gray-600 group-hover:text-gray-900" />
             <div className="text-left">
@@ -106,6 +106,7 @@ export const modalContents: Record<ModalType, ModalConfig> = {
               "Next.js",
               "WebGL",
               "Blender",
+              "Figma",
             ].map((skill) => (
               <span
                 key={skill}

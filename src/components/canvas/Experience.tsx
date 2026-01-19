@@ -4,13 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 
 import LoadingScreen from "@/components/ui/LoadingScreen";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import AnimatedDialog from "@/components/AnimatedDialog";
 
 import { createRenderer } from "@/three/core/renderer";
 import { createControls } from "@/three/core/controls";
@@ -203,20 +197,15 @@ export default function Experience() {
         className="fixed inset-0 h-full w-full outline-none"
       />
 
-      <Dialog open={!!activeModal} onOpenChange={() => setActiveModal(null)}>
-        <DialogContent className="sm:max-w-125">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 text-xl">
-              {ModalIcon && <ModalIcon className="w-6 h-6" />}
-              {currentModalConfig?.title}
-            </DialogTitle>
-            <DialogDescription className="text-base">
-              {currentModalConfig?.description}
-            </DialogDescription>
-          </DialogHeader>
-          <div className="mt-4">{currentModalConfig?.content}</div>
-        </DialogContent>
-      </Dialog>
+      <AnimatedDialog
+        open={!!activeModal}
+        onOpenChange={() => setActiveModal(null)}
+        title={currentModalConfig?.title}
+        description={currentModalConfig?.description}
+        icon={ModalIcon}
+      >
+        {currentModalConfig?.content}
+      </AnimatedDialog>
     </>
   );
 }

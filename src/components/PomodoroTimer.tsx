@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { FaPlay, FaPause, FaClockRotateLeft } from "react-icons/fa6";
 
-const DEFAULT_TIME = 25 * 60;
+const DEFAULT_TIME = 1 * 60;
 
 export default function PomodoroTimer() {
   const [time, setTime] = useState(DEFAULT_TIME);
@@ -34,7 +34,7 @@ export default function PomodoroTimer() {
 
   const minutes = Math.floor(time / 60);
   const seconds = time % 60;
-
+  const isFinished = time === 0;
   return (
     <div className="flex flex-col items-center space-y-6">
       {/* Timer Display */}
@@ -58,7 +58,7 @@ export default function PomodoroTimer() {
             fill="transparent"
             strokeDasharray={2 * Math.PI * 88}
             strokeDashoffset={2 * Math.PI * 88 * (1 - time / DEFAULT_TIME)}
-            className="text-blue-500 transition-all duration-1000 ease-linear"
+            className="text-orange-500 transition-all duration-1000 ease-linear"
             strokeLinecap="round"
           />
         </svg>
@@ -75,10 +75,12 @@ export default function PomodoroTimer() {
       <div className="flex gap-3">
         <button
           onClick={toggleTimer}
-          className="flex items-center gap-2 px-6 py-3 bg-blue-500 text-white rounded-lg"
+          disabled={isFinished}
+          className="flex items-center gap-2 px-6 py-3 bg-orange-500 text-white rounded-lg hover-pointer"
         >
           {isActive ? <FaPause /> : <FaPlay />}
-          {isActive ? "Pause" : "Start"}
+          {isFinished ? "Finish" : isActive ? "Pause" : "Start"}
+          {/* {isFinished ? "Finish" : "Restart"} */}
         </button>
 
         <button
