@@ -58,7 +58,7 @@ export default function PomodoroTimer() {
             fill="transparent"
             strokeDasharray={2 * Math.PI * 88}
             strokeDashoffset={2 * Math.PI * 88 * (1 - time / DEFAULT_TIME)}
-            className="text-blue-500 transition-all duration-1000 ease-linear"
+            className="text-orange-500 transition-all duration-1000 ease-linear"
             strokeLinecap="round"
           />
         </svg>
@@ -75,7 +75,7 @@ export default function PomodoroTimer() {
       <div className="flex gap-3">
         <button
           onClick={toggleTimer}
-          className="flex items-center gap-2 px-6 py-3 bg-blue-500 text-white rounded-lg"
+          className="flex items-center gap-2 px-6 py-3 bg-orange-500 text-white rounded-lg hover-pointer"
         >
           {isActive ? <FaPause /> : <FaPlay />}
           {isActive ? "Pause" : "Start"}
