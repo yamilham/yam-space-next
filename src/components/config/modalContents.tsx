@@ -10,6 +10,7 @@ import {
   FaClock,
 } from "react-icons/fa6";
 import PomodoroTimer from "@/components/timer/PomodoroTimer";
+import TodoList from "../todo-list/ToDo";
 import { IconType } from "react-icons";
 
 export type ModalType =
@@ -126,10 +127,22 @@ export const modalContents: Record<ModalType, ModalConfig> = {
             </p>
           </div>
           <div></div>
-          <p className="text-gray-600">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nam aliquam enim dolore, voluptate rem alias recusandae unde ea laudantium vero magni illo sint, consequuntur facilis aliquid facere itaque? Dignissimos, incidunt?
-          Numquam obcaecati deleniti officia aliquam ex fuga itaque. Sint enim veniam laboriosam incidunt accusamus unde sequi cumque officia quaerat iure. Ipsam repellat quasi voluptate non eum sed dolore officiis incidunt?
-          Tempora explicabo neque exercitationem laudantium dolores voluptatem doloribus magni ea? Vero nulla eaque adipisci ab placeat accusamus deserunt veniam sint impedit perferendis? Veniam deleniti quis mollitia asperiores voluptates consequuntur dolore.
-          Unde nostrum, veniam molestiae architecto impedit doloribus dignissimos iste adipisci mollitia aperiam veritatis accusantium harum ipsum dolor enim quae. Maxime unde amet placeat! Alias, modi ullam! Fugiat odio consectetur laudantium.
+          <p className="text-gray-600">
+            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nam
+            aliquam enim dolore, voluptate rem alias recusandae unde ea
+            laudantium vero magni illo sint, consequuntur facilis aliquid facere
+            itaque? Dignissimos, incidunt? Numquam obcaecati deleniti officia
+            aliquam ex fuga itaque. Sint enim veniam laboriosam incidunt
+            accusamus unde sequi cumque officia quaerat iure. Ipsam repellat
+            quasi voluptate non eum sed dolore officiis incidunt? Tempora
+            explicabo neque exercitationem laudantium dolores voluptatem
+            doloribus magni ea? Vero nulla eaque adipisci ab placeat accusamus
+            deserunt veniam sint impedit perferendis? Veniam deleniti quis
+            mollitia asperiores voluptates consequuntur dolore. Unde nostrum,
+            veniam molestiae architecto impedit doloribus dignissimos iste
+            adipisci mollitia aperiam veritatis accusantium harum ipsum dolor
+            enim quae. Maxime unde amet placeat! Alias, modi ullam! Fugiat odio
+            consectetur laudantium.
           </p>
         </div>
       </div>
@@ -140,37 +153,7 @@ export const modalContents: Record<ModalType, ModalConfig> = {
     title: "To-Do List",
     description: "Current tasks and goals",
     icon: FaCheck,
-    content: (
-      <div className="space-y-3">
-        {[
-          { task: "Complete 3D portfolio website", done: true },
-          { task: "Add more interactive elements", done: true },
-          { task: "Optimize performance", done: false },
-          { task: "Add mobile responsiveness", done: false },
-          { task: "Deploy to production", done: false },
-        ].map((item, idx) => (
-          <div
-            key={idx}
-            className="flex items-center gap-3 p-3 rounded-lg border hover:bg-gray-50 transition-colors"
-          >
-            <div
-              className={`w-5 h-5 rounded border-2 flex items-center justify-center ${
-                item.done ? "bg-green-500 border-green-500" : "border-gray-300"
-              }`}
-            >
-              {item.done && <FaCheck className="w-4 h-4 text-white" />}
-            </div>
-            <span
-              className={
-                item.done ? "text-gray-400 line-through" : "text-gray-700"
-              }
-            >
-              {item.task}
-            </span>
-          </div>
-        ))}
-      </div>
-    ),
+    content: <TodoList />,
   },
 
   noteroutine: {
@@ -203,7 +186,7 @@ export const modalContents: Record<ModalType, ModalConfig> = {
   },
 
   digitalwatch: {
-    title: "Timer",
+    title: "Pomodoro Timer",
     description: "Track your focus time",
     icon: FaClock,
     content: <PomodoroTimer />,
