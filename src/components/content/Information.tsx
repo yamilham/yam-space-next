@@ -119,6 +119,9 @@ export default function InformationButton() {
                   </kbd>
                 </div>
               </div>
+              <div className="flex justify-center text-xs text-gray-400 pt-4">
+                Hint: Only a few object you can interact with.
+              </div>
             </TabsContent>
           </Tabs>
         </DialogContent>

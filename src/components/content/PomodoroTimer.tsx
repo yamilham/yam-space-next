@@ -84,7 +84,11 @@ export default function PomodoroTimer() {
 
   const toggleTimer = () => {
     // Request notification permission on first start
-    if (!isActive && typeof window !== "undefined" && "Notification" in window) {
+    if (
+      !isActive &&
+      typeof window !== "undefined" &&
+      "Notification" in window
+    ) {
       if (Notification.permission === "default") {
         Notification.requestPermission();
       }
@@ -167,7 +171,7 @@ export default function PomodoroTimer() {
 
       {/* Info Text */}
       <p className="text-xs text-gray-500 text-center max-w-xs">
-        Timer persists across page refreshes and dialog closures
+        Close it, refresh it—your timer remembers.
       </p>
     </div>
   );
