@@ -9,7 +9,7 @@ import {
   FaCalendar,
   FaClock,
 } from "react-icons/fa6";
-import PomodoroTimer from "@/components/PomodoroTimer";
+import PomodoroTimer from "@/components/timer/PomodoroTimer";
 import { IconType } from "react-icons";
 
 export type ModalType =
@@ -70,7 +70,7 @@ export const modalContents: Record<ModalType, ModalConfig> = {
             rel="noopener noreferrer"
             className="flex items-center gap-3 p-4 rounded-lg border hover:border-blue-500 hover:bg-gray-50 transition-all group"
           >
-            <FaGithub className="w-5 h-5 text-gray-600 group-hover:text-gray-900" />
+            <FaGithub className="w-5 h-5 text-gray-600 group-hover:text-blue-600" />
             <div className="text-left">
               <div className="text-sm font-medium">GitHub</div>
               <div className="text-xs text-gray-500">Check my code</div>
@@ -82,13 +82,13 @@ export const modalContents: Record<ModalType, ModalConfig> = {
   },
 
   book: {
-    title: "Manual",
+    title: "About Me",
     description: "Learn more about me and my work",
     icon: FaBook,
     content: (
-      <div className="space-y-4">
+      <div className="space-y-4 max-h-120 max-w-150 overflow-y-auto">
         <div className="prose prose-sm max-w-none">
-          <h3 className="text-lg font-semibold mb-2">About Me</h3>
+          <h3 className="text-lg font-semibold mb-1">About Me</h3>
           <p className="text-gray-600">
             I&apos;m a passionate developer specializing in creating immersive
             3D web experiences. With expertise in Three.js, React, and modern
@@ -96,7 +96,7 @@ export const modalContents: Record<ModalType, ModalConfig> = {
             experiences.
           </p>
 
-          <h3 className="text-lg font-semibold mt-4 mb-2">Skills</h3>
+          <h3 className="text-lg font-semibold mt-4 mb-1">Skills</h3>
           <div className="flex flex-wrap gap-2">
             {[
               "Three.js",
@@ -110,18 +110,26 @@ export const modalContents: Record<ModalType, ModalConfig> = {
             ].map((skill) => (
               <span
                 key={skill}
-                className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm"
+                className="px-3 py-1.5 bg-gray-200 text-balance text-gray-700 rounded-full text-sm"
               >
                 {skill}
               </span>
             ))}
           </div>
 
-          <h3 className="text-lg font-semibold mt-4 mb-2">Experience</h3>
-          <p className="text-gray-600">
-            5+ years of experience in web development and 3D visualization.
-            Worked on projects ranging from interactive product showcases to
-            educational 3D applications.
+          <div className="flex justify-between items-center">
+            <h3 className="text-lg font-semibold mt-4 mb-1">
+              Selected Projects
+            </h3>
+            <p className="text-sm font-medium text-gray-600">
+              View all projects
+            </p>
+          </div>
+          <div></div>
+          <p className="text-gray-600">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nam aliquam enim dolore, voluptate rem alias recusandae unde ea laudantium vero magni illo sint, consequuntur facilis aliquid facere itaque? Dignissimos, incidunt?
+          Numquam obcaecati deleniti officia aliquam ex fuga itaque. Sint enim veniam laboriosam incidunt accusamus unde sequi cumque officia quaerat iure. Ipsam repellat quasi voluptate non eum sed dolore officiis incidunt?
+          Tempora explicabo neque exercitationem laudantium dolores voluptatem doloribus magni ea? Vero nulla eaque adipisci ab placeat accusamus deserunt veniam sint impedit perferendis? Veniam deleniti quis mollitia asperiores voluptates consequuntur dolore.
+          Unde nostrum, veniam molestiae architecto impedit doloribus dignissimos iste adipisci mollitia aperiam veritatis accusantium harum ipsum dolor enim quae. Maxime unde amet placeat! Alias, modi ullam! Fugiat odio consectetur laudantium.
           </p>
         </div>
       </div>
