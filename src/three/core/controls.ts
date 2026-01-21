@@ -1,11 +1,11 @@
-import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+import { OrbitControls } from "@/three/orbitControls/OrbitControls";
 import * as THREE from "three";
 
 export function createControls(camera: THREE.Camera, domElement: HTMLElement) {
   const controls = new OrbitControls(camera, domElement);
   controls.enableDamping = true;
-  controls.minDistance = 2;
-  controls.maxDistance = 45;
+  controls.minDistance = 4;
+  controls.maxDistance = 35;
   controls.minPolarAngle = 0;
   controls.maxPolarAngle = Math.PI / 2;
   controls.minAzimuthAngle = 0;
