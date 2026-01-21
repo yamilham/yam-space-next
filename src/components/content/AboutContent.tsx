@@ -1,4 +1,5 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import Image from "next/image";
 
 export default function AboutSection() {
   return (
@@ -15,8 +16,8 @@ export default function AboutSection() {
               Welcome to Yam Space 🙌
             </h3>
             <p className="text-gray-600 leading-normal">
-              A cozy tiny space with no fancy setup desk🥲 so you can keep focus
-              achieve your daily task. This interactive 3D portfolio explores
+              A cozy tiny space with no fancy setup desk so you can keep focus
+              achieve your daily task 🥲. This interactive 3D portfolio explores
               how modern web technologies can create immersive, high-performance
               experiences directly in the browser. Built with Three.js and
               React, the project focuses on smooth interaction, visual clarity,
@@ -32,30 +33,11 @@ export default function AboutSection() {
             <h4 className="text-md font-semibold mt-6 mb-1.5">Key Features</h4>
             <ul className="text-gray-600 space-y-2 list-disc list-inside">
               <li>
-                Interactive 3D environment with smooth camera controls for
-                intuitive navigation
+                Interactive 3D environment with free-hand navigation control
               </li>
-              <li>
-                Real-time object interactions and animations that respond
-                instantly to user input
-              </li>
-              <li>
-                Responsive experience optimized for desktop and mobile devices
-              </li>
-              <li>
-                Persistent data storage to support built-in productivity tools
-                such as timers and to-do lists
-              </li>
-              <li>
-                Modal-based navigation system that keeps content accessible
-                without breaking immersion
-              </li>
+              <li>Track your productivity time using Pomodoro Timer</li>
+              <li>Draft your todays activity</li>
             </ul>
-            <p className="text-gray-600 leading-normal mt-2">
-              Each feature was designed with performance and usability in mind,
-              ensuring the experience remains fluid even as interactions become
-              more complex.
-            </p>
 
             <h4 className="text-md font-semibold mt-6 mb-1.">
               Technologies Used
@@ -96,12 +78,22 @@ export default function AboutSection() {
 
         <TabsContent value="author" className="space-y-4 py-4">
           <div className="prose prose-sm max-w-none">
+            <div className="relative w-full h-84 overflow-hidden mb-3.5">
+              <Image
+                src="/potrait/self_potrait.png"
+                alt="potrait-image"
+                fill
+                className="object-top rounded-xl"
+                sizes="100vw"
+                style={{ objectFit: "cover" }}
+              />
+            </div>
             <h3 className="text-lg font-semibold mb-1">About Me</h3>
             <p className="text-gray-600">
-              I&apos;m an enthusiastic developer who enjoys creating immersive
-              3D experiences on the web. With a strong focus on Three.js and
-              React, I bring concepts to life through interactive,
-              performance-driven digital experiences.
+              My name is Muhamad Ilham, I&apos;m an enthusiastic developer who
+              enjoys creating immersive 3D experiences on the web. With a strong
+              focus on Three.js and React, I bring concepts to life through
+              interactive, performance-driven digital experiences.
             </p>
 
             <h3 className="text-lg font-semibold mt-6 mb-1">Skills</h3>
