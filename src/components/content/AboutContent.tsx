@@ -15,11 +15,12 @@ export default function AboutSection() {
               Welcome to Yam Space 🙌
             </h3>
             <p className="text-gray-600 leading-normal">
-              This interactive 3D portfolio explores how modern web technologies
-              can create immersive, high-performance experiences directly in the
-              browser. Built with Three.js and React, the project focuses on
-              smooth interaction, visual clarity, and meaningful user
-              engagement.
+              A cozy tiny space with no fancy setup desk🥲 so you can keep focus
+              achieve your daily task. This interactive 3D portfolio explores
+              how modern web technologies can create immersive, high-performance
+              experiences directly in the browser. Built with Three.js and
+              React, the project focuses on smooth interaction, visual clarity,
+              and meaningful user engagement.
             </p>
             <p className="text-gray-600 leading-normal">
               Rather than presenting work in a static layout, this portfolio
