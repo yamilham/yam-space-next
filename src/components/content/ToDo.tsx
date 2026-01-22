@@ -12,10 +12,11 @@ interface Task {
 const STORAGE_KEY = "todolist-tasks";
 
 const defaultTasks: Task[] = [
-  { id: "1", text: "Complete 3D portfolio website", completed: true },
-  { id: "2", text: "Add more interactive elements", completed: true },
-  { id: "3", text: "Optimize performance", completed: false },
-  { id: "4", text: "Add mobile responsiveness", completed: false },
+  { id: "1", text: "Create 3D Assets", completed: true },
+  { id: "2", text: "Learn Three.js", completed: true },
+  { id: "3", text: "Build interactive 3D Portfolio Web", completed: true },
+  { id: "4", text: "Add more interactive elements", completed: true },
+  { id: "5", text: "Optimize performance", completed: false },
 ];
 
 export default function TodoList() {

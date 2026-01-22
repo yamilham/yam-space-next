@@ -64,7 +64,7 @@ export default function PomodoroTimer() {
       setTime((prev) => {
         if (prev <= 1) {
           setIsActive(false);
-          // Optional: Show notification when timer completes
+          // Show notification when timer completes
           if (typeof window !== "undefined" && "Notification" in window) {
             if (Notification.permission === "granted") {
               new Notification("Pomodoro Timer", {
