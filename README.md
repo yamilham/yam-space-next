@@ -1,36 +1,25 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+![Yam Space Preview](./public/assets/banner.webp)
 
-## Getting Started
+# Welcome to Yam Space 🙌
+A cozy, minimal space with no fancy desk setup—so you can stay focused and get your daily tasks done 🥲. This interactive 3D portfolio explores how modern web technologies can create immersive, high-performance experiences directly in the browser. Built with Three.js and React, the project focuses on smooth interaction, visual clarity, and meaningful user engagement.
 
-First, run the development server:
+Rather than presenting work in a static layout, this portfolio invites visitors to navigate a 3D environment, interact with objects, and explore content in a more natural and memorable way—mirroring how people engage with real spaces.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+# 🗝️ Key Features 
+- Interactive 3D environment with free-hand navigation control
+- Track your productivity time using Pomodoro Timer
+- Draft your todays activity
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+# 💻 Technologies Used
+- Three.js
+- Next.js
+- TypeScript
+- Tailwind CSS
+- GSAP
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+# 🎯 Project Goals
+The primary goal of this project was to create a memorable portfolio experience that goes beyond traditional static websites. By combining 3D graphics with interactive web technologies, the portfolio allows visitors to explore my work in a way that feels engaging, intuitive, and immersive.
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This project also serves as a technical showcase—demonstrating how modern frontend tools can be used to build interactive, performant, and scalable 3D experiences directly in the browser, without sacrificing usability or clarity.
