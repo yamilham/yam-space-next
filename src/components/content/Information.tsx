@@ -22,12 +22,13 @@ import {
 export default function InformationButton() {
   const [open, setOpen] = useState(false);
   return (
-    <div className="absolute z-50 top-6 right-6">
+    <div className="absolute z-50 top-6 right-6 hover:focus">
       <Button
         onClick={() => setOpen(true)}
         variant="secondary"
         size="icon"
         aria-label="Information"
+        className="cursor-pointer"
       >
         <FaInfo className="w-12 h-12" />
       </Button>
@@ -42,8 +43,8 @@ export default function InformationButton() {
 
           <Tabs defaultValue="view" className="w-full">
             <TabsList className="grid grid-cols-2 w-full">
-              <TabsTrigger value="view">View Controls</TabsTrigger>
-              <TabsTrigger value="interaction">Interaction</TabsTrigger>
+              <TabsTrigger value="view" className="cursor-pointer">View Controls</TabsTrigger>
+              <TabsTrigger value="interaction" className="cursor-pointer">Interaction</TabsTrigger>
             </TabsList>
             <TabsContent value="view" className="space-y-3 py-4">
               <div className="flex items-center justify-between py-2 gap-4 mx-3">
